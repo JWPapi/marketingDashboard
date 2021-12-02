@@ -15,33 +15,23 @@
     "cheerio": "^1.0.0-rc.3",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
-    "csv-string": "^4.",
+    "csv-string": "^4.0.0",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
-    "express-session": "^1.17.1",
     "facebook-nodejs-business-sdk": "^11.0.0",
     "forever-monitor": "^3.0.1",
     "googleapis": "^59.0.0",
-    "knex": "^0.21.6",
     "livereload": "^0.9.1",
     "luxon": "^1.25.0",
     "node-cron": "^2.0.3",
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.7",
     "path": "^0.12.7",
-    "pg": "^8.5.1",
     "stripe": "^8.176.0"
   },
   "devDependencies": {
     "base-64": "^0.1.0",
-    "concurrently": "^5.3.0",
-    "eslint": "^7.2.0",
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.21.5",
-    "eslint-plugin-react-hooks": "^4.0.0"
+    "concurrently": "^5.3.0"
   }
 }
