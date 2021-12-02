@@ -25,9 +25,9 @@ const auth = {
 
 googleRouter.get('/adwords', (req, res, next) => {
     const { entity } = req.query
-    const validEntities = ['skills-pro']['skills-candid']
+    const validEntities = ['skills-pro', 'skills-candid']
 
-    if (validEntities.include(entity) === false) return res.status(400).json({ error : 'Invalid entity' })
+    if (validEntities.includes(entity) === false) return res.status(400).json({ error : 'Invalid entity' })
 
     const timeframes = [today, yesterday, [startOfMonth, today], [startOfLastMonth, endOfLastMonth]]
 

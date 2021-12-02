@@ -38,7 +38,6 @@ module.exports = (req, res) => {
             const orderData = await orderResponse.json()
 
             const orderTotalAndCurrency = Array.isArray(orderData) ? orderData.map((order, index) => {
-                if (index === 3) console.log(order.line_items)
                 if (order.line_items.length > 1) {
                     if (entity === 'skills-pro') {
                         const proItems = order.line_items.filter(item => item.product_id === 41735)

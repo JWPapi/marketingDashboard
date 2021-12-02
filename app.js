@@ -5,7 +5,6 @@ const { schedule } = require('node-cron');
 const bodyParser = require('body-parser');
 const livereload = require('livereload');
 const path = require('path');
-const session = require('express-session');
 const dailyReport = require('./crons/dailyReporting');
 const routes = require('./routes/router.js');
 
@@ -13,8 +12,6 @@ const app = express();
 
 
 
-
-app.use(session({ secret: 'You can’t tell it anyone' }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
