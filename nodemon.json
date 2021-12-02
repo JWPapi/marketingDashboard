@@ -1,0 +1,6 @@
+{
+  "ignore": ["public"],
+  "events": {
+    "exit": "npx browserify src/index.js -o public/index.js"
+  }
+}

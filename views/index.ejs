@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="">
+<head>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1"/>
+    <meta name="description"
+          content="Dashboard for Wagner & Lacad"/>
+    <meta http-equiv="refresh"
+          content="180"/>
+    <title>Wagner & Lacad Dashboard</title>
+
+    <link rel="stylesheet"
+          href="/style/style.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap"
+          rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <script src="/index.js?v=2"
+            defer></script>
+</head>
+<body>
+<%- include('./partials/header') %>
+
+<main class="bg-gray-200 min-h-screen h-100 pt-8">
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 gap-4 sm:gap-8 sm:px-8 px-2 py-8 text-center">
+            <div class="bg-white shadow-xl hover:shadow-2xl sm:p-8 p-4 flex justify-center rounded-lg">
+                <div class="overflow-x-auto text-xs sm:text-base">
+
+                    <table id="rmb-table">
+                        <thead>
+                        <th></th>
+                        <th>Today</th>
+                        <th>Yesterday</th>
+                        <th>MTD</th>
+                        <th>Last M</th>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td> Expenses</td>
+                        </tr>
+                        <tr id="fbExp-rmb">
+                            <td class="text-center">
+                                <img class="mx-auto table-icon"
+                                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAABjElEQVRIib3VT0sVURgG8J9eVy6sTQWCO7Eg0UUuFD9AiOA3MCIIFwbt2kkE4TISrKW0atEXKPELKFLSxi8Q4r0XCVetrt0WZ8xzp5k7ZxR74MCZd573ed53zp/hmjGQwGlgFtO4k8Wa+I5d/L6s+Q2so41uyWjhNUbqii/gpI9wfrTxMFV8BZ0a4uejg6cplaeIt/EVh7lOO/06uan6s+zhbi7vSYF54ZqsV4if4lZBXt6gKyx8DxrCjuhn8CHiD+MNPmG/gNvEYGwwXyHexYuIv5rAnxO5TBW0nsevaD6ewJ+KDUYTEmIMVlOCZhXxQLhOBrAZxZ9H8bWUSloJFZVhoiTegqHs4VsJaRgPsvkPYY/DGG5n8+mS3B7NhupD9izib1Rw25nm3090hvcllVwG7zLNnkV+62prcY6m0KG8wU88doUfSJb7SLhW/jGAL1gWbsW6OBOu6504WHQOPmIJxzXEj7CIrfyLsoP2GffxysXWLEITLzGJ7RoF9aCBGdyLYrNZbKgw43/iD3oXpjAheUoMAAAAAElFTkSuQmCC"/>
+                            </td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                        </tr>
+                        <tr id="tiktokExp-rmb">
+                            <td class="text-center">
+                                <img style="width:26px"
+                                     class="mx-auto table-icon"
+                                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAABoUlEQVRoge2ZvU4CQRRGDyZsI9jrQ6ihkFDaqe9gr5FXsUBDYauNL6ISRTt9ANHEWrbAwqzFsIWT3YGdvx2SOcktyGTu/b5huGTvQiQSiYROAvSBEZACmeNIgQfgbF7biC3gxYPosngGNnXFJzWLz2MMNHUM9AMQn8epjoFRAMLzuC8T2VAYmAKtiqZdMQU2ihZUBjI3WrQp1LrmW4VtfBhoSPFlM3kd38C5r0K2OohMA7iykKc2AznHwJtpHh9dSFWjSp3YhWyx7auQq9/AL3AL7ANtgzzWDcyAAdAF1hWFbTcDKwY+gJ2S/cEbmBWIXykDgwX7gzewJ+07QlyplTEgPzNMFhS2asD1/8BE+tx2XO8fy55MV9p3iBD+DhxIa70Keb1doYsKOYchGpgBu0vk6wA/IRrIEF1HZaIDfBqId24gQ5zuJeKet+bRQ1wbk5NXGohTibpRGUi9qVjMd9mCysCrAyG6lGpRGbhxIESXa51NCWI+b9o9TOMRzfE6iJcL4xrFP2HwgiOniZjP3yGmxK5FT+e1TjA4+UgkEvHDHyqml91iaVUUAAAAAElFTkSuQmCC">
+
+                            </td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                        </tr>
+                        <tr>
+                            <td>Sales</td>
+                        </tr>
+                        <tr id="fbSales-rmb">
+                            <td class="text-center">
+                                <img class="mx-auto table-icon"
+                                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAABjElEQVRIib3VT0sVURgG8J9eVy6sTQWCO7Eg0UUuFD9AiOA3MCIIFwbt2kkE4TISrKW0atEXKPELKFLSxi8Q4r0XCVetrt0WZ8xzp5k7ZxR74MCZd573ed53zp/hmjGQwGlgFtO4k8Wa+I5d/L6s+Q2so41uyWjhNUbqii/gpI9wfrTxMFV8BZ0a4uejg6cplaeIt/EVh7lOO/06uan6s+zhbi7vSYF54ZqsV4if4lZBXt6gKyx8DxrCjuhn8CHiD+MNPmG/gNvEYGwwXyHexYuIv5rAnxO5TBW0nsevaD6ewJ+KDUYTEmIMVlOCZhXxQLhOBrAZxZ9H8bWUSloJFZVhoiTegqHs4VsJaRgPsvkPYY/DGG5n8+mS3B7NhupD9izib1Rw25nm3090hvcllVwG7zLNnkV+62prcY6m0KG8wU88doUfSJb7SLhW/jGAL1gWbsW6OBOu6504WHQOPmIJxzXEj7CIrfyLsoP2GffxysXWLEITLzGJ7RoF9aCBGdyLYrNZbKgw43/iD3oXpjAheUoMAAAAAElFTkSuQmCC"/>
+                            </td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                        </tr>
+
+                        <tr>
+                            <td>KPI</td>
+                        </tr>
+                        <tr id="wcSales-rmb"
+                            class="mt-4 border-top">
+                            <td class="text-center">
+                                Revenue
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr id="profitRow-rmb"
+                            class="font-weight-bold">
+                            <td class="text-center">
+                                Profit
+                            </td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="bg-white shadow-xl hover:shadow-2xl sm:p-8 p-4 rounded-lg">
+                <div class="h-full flex ">
+                    <div class="my-auto w-full">
+                        <h2 class="text-center mb-8 font-weight-bold">Rene Social Growth </h2>
+                        <canvas id="TikTokFollowerRene"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white shadow-xl hover:shadow-2xl sm:p-8 p-4 flex justify-center rounded-lg">
+                <div class="overflow-x-auto text-xs sm:text-base">
+                    <table id="skills-table">
+                        <thead>
+                        <th></th>
+                        <th>Today</th>
+                        <th>Yesterday</th>
+                        <th>MTD</th>
+                        <th>Last M</th>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td> Expenses</td>
+                        </tr>
+                        <tr id="fbExp-skills-candid"
+                            class="border-top">
+                            <td class="text-center">
+                                <a href="https://business.facebook.com/adsmanager/manage/campaigns?act=359727158611640&business_id=761833260858231&columns=name%2Cdelivery%2Ccampaign_name%2Cbid%2Cbudget%2Clast_significant_edit%2Cresults%2Creach%2Cimpressions%2Ccost_per_result%2Cquality_score_organic%2Cquality_score_ectr%2Cquality_score_ecvr%2Cspend%2Cend_time%2Cschedule%2Cactions%3Alink_click%2Cactions%3Aoffsite_conversion.fb_pixel_purchase%2Cactions%3Aonsite_conversion.purchase%2Cwebsite_purchase_roas%3Aoffsite_conversion.fb_pixel_purchase&attribution_windows=default">
+                                    <img class="mx-auto table-icon"
+                                         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAABjElEQVRIib3VT0sVURgG8J9eVy6sTQWCO7Eg0UUuFD9AiOA3MCIIFwbt2kkE4TISrKW0atEXKPELKFLSxi8Q4r0XCVetrt0WZ8xzp5k7ZxR74MCZd573ed53zp/hmjGQwGlgFtO4k8Wa+I5d/L6s+Q2so41uyWjhNUbqii/gpI9wfrTxMFV8BZ0a4uejg6cplaeIt/EVh7lOO/06uan6s+zhbi7vSYF54ZqsV4if4lZBXt6gKyx8DxrCjuhn8CHiD+MNPmG/gNvEYGwwXyHexYuIv5rAnxO5TBW0nsevaD6ewJ+KDUYTEmIMVlOCZhXxQLhOBrAZxZ9H8bWUSloJFZVhoiTegqHs4VsJaRgPsvkPYY/DGG5n8+mS3B7NhupD9izib1Rw25nm3090hvcllVwG7zLNnkV+62prcY6m0KG8wU88doUfSJb7SLhW/jGAL1gWbsW6OBOu6504WHQOPmIJxzXEj7CIrfyLsoP2GffxysXWLEITLzGJ7RoF9aCBGdyLYrNZbKgw43/iD3oXpjAheUoMAAAAAElFTkSuQmCC"/>
+                                </a>
+                            </td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                        </tr>
+                        <tr id="googleExp-skills-candid">
+                            <td class="text-center">
+                                <a href="https://ads.google.com/aw/overview?ocid=605602508&euid=45698931&__u=4194347419&uscid=605602508&__c=3417469292&authuser=0&subid=at-de-ha-aw-sk-c-bau!o3~Cj0KCQiAh4j-BRCsARIsAGeV12AaKWAsRtnAy2ZbLp8BE0M19PLYg5zHm8NsYOllxn7akuNRXUHpToEaAtzlEALw_wcB~57172089813">
+                                    <img class="mx-auto table-icon"
+                                         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAABYElEQVRIieXVO0scYRTG8Z+Xwko0EMMaRQgpjOWCfSA2hlSCoNZByEcIaVMHtkgQv4D4DbRKkKiICNpEYquuNmKwM8tmU8wOGWdn55ZKfODA8HKe/znvvDcegp7jA77jHL9xiT18xFRZ8COsoIFWSjSxhpEi8EmcZIDjcdZuKlMVnBaE/8G7PPAe7CQADrCAx+28YcwJ1qWJt3ngsJgA/4S+lIam88JhPwZfK2LO0rjgX4bwW4z+L7Q/8l0VTDnUV9QTPPNYzuC2MItmtEAllnTcxTyBmYwC8AT13hyJZdWCaIGLWELpK6AN/xUfHNO5yE8TzAOCcxCN1+7uvh/dKse36bq7C5+kHmzEfF+6JS/oPGg16QetluCppnWznWA4xJJ/N+Yg3uBbQu5m2nQpd9mFcSXYxpmaxM+C8Bu8zAMPNYTPghcsC76LF0XgUT3De2wJHpUGrnGEVbwqC74f+gsL/Z79dQlZNgAAAABJRU5ErkJggg=="/>
+                                </a>
+                            </td>
+
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                        </tr>
+                        <tr>
+                            <td>Sales</td>
+                        </tr>
+                        <tr id="fbSales-skills-candid"
+                            class="border-top">
+                            <td class="text-center">
+                                <a href="https://business.facebook.com/adsmanager/manage/campaigns?act=359727158611640&business_id=761833260858231&columns=name%2Cdelivery%2Ccampaign_name%2Cbid%2Cbudget%2Clast_significant_edit%2Cresults%2Creach%2Cimpressions%2Ccost_per_result%2Cquality_score_organic%2Cquality_score_ectr%2Cquality_score_ecvr%2Cspend%2Cend_time%2Cschedule%2Cactions%3Alink_click%2Cactions%3Aoffsite_conversion.fb_pixel_purchase%2Cactions%3Aonsite_conversion.purchase%2Cwebsite_purchase_roas%3Aoffsite_conversion.fb_pixel_purchase&attribution_windows=default">
+
+                                    <img class="mx-auto table-icon"
+                                         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAABjElEQVRIib3VT0sVURgG8J9eVy6sTQWCO7Eg0UUuFD9AiOA3MCIIFwbt2kkE4TISrKW0atEXKPELKFLSxi8Q4r0XCVetrt0WZ8xzp5k7ZxR74MCZd573ed53zp/hmjGQwGlgFtO4k8Wa+I5d/L6s+Q2so41uyWjhNUbqii/gpI9wfrTxMFV8BZ0a4uejg6cplaeIt/EVh7lOO/06uan6s+zhbi7vSYF54ZqsV4if4lZBXt6gKyx8DxrCjuhn8CHiD+MNPmG/gNvEYGwwXyHexYuIv5rAnxO5TBW0nsevaD6ewJ+KDUYTEmIMVlOCZhXxQLhOBrAZxZ9H8bWUSloJFZVhoiTegqHs4VsJaRgPsvkPYY/DGG5n8+mS3B7NhupD9izib1Rw25nm3090hvcllVwG7zLNnkV+62prcY6m0KG8wU88doUfSJb7SLhW/jGAL1gWbsW6OBOu6504WHQOPmIJxzXEj7CIrfyLsoP2GffxysXWLEITLzGJ7RoF9aCBGdyLYrNZbKgw43/iD3oXpjAheUoMAAAAAElFTkSuQmCC"/>
+                                </a>
+                            </td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                        </tr>
+                        <tr id="googleSales-skills-candid">
+                            <td class="text-center">
+                                <a href="https://ads.google.com/aw/overview?ocid=605602508&euid=45698931&__u=4194347419&uscid=605602508&__c=3417469292&authuser=0&subid=at-de-ha-aw-sk-c-bau!o3~Cj0KCQiAh4j-BRCsARIsAGeV12AaKWAsRtnAy2ZbLp8BE0M19PLYg5zHm8NsYOllxn7akuNRXUHpToEaAtzlEALw_wcB~57172089813">
+
+                                    <img class="mx-auto table-icon"
+                                         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAABYElEQVRIieXVO0scYRTG8Z+Xwko0EMMaRQgpjOWCfSA2hlSCoNZByEcIaVMHtkgQv4D4DbRKkKiICNpEYquuNmKwM8tmU8wOGWdn55ZKfODA8HKe/znvvDcegp7jA77jHL9xiT18xFRZ8COsoIFWSjSxhpEi8EmcZIDjcdZuKlMVnBaE/8G7PPAe7CQADrCAx+28YcwJ1qWJt3ngsJgA/4S+lIam88JhPwZfK2LO0rjgX4bwW4z+L7Q/8l0VTDnUV9QTPPNYzuC2MItmtEAllnTcxTyBmYwC8AT13hyJZdWCaIGLWELpK6AN/xUfHNO5yE8TzAOCcxCN1+7uvh/dKse36bq7C5+kHmzEfF+6JS/oPGg16QetluCppnWznWA4xJJ/N+Yg3uBbQu5m2nQpd9mFcSXYxpmaxM+C8Bu8zAMPNYTPghcsC76LF0XgUT3De2wJHpUGrnGEVbwqC74f+gsL/Z79dQlZNgAAAABJRU5ErkJggg=="/>
+                                </a>
+                            </td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                        </tr>
+
+                        <tr>
+                            <td>KPI</td>
+                        </tr>
+                        <tr id="wcSales-skills-candid"
+                            class="mt-4 border-top">
+                            <td class="text-center">
+                                Revenue
+                            </td>
+                            <td class="tooltip underline cursor-help"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr id="profitRow-skills-candid"
+                            class="font-weight-bold">
+                            <td class="text-center">
+                                Profit
+                            </td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="bg-white shadow-xl hover:shadow-2xl sm:p-8 p-4 flex justify-center rounded-lg">
+                <div class="overflow-x-auto text-xs sm:text-base">
+                    <table id="skillsPro-table">
+                        <thead>
+                        <th></th>
+                        <th>Today</th>
+                        <th>Yesterday</th>
+                        <th>MTD</th>
+                        <th>Last M</th>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td> Expenses</td>
+                        </tr>
+                        <tr id="fbExp-skills-pro"
+                            class="border-top">
+                            <td class="text-center">
+                                <a href="https://business.facebook.com/adsmanager/manage/campaigns?act=359727158611640&business_id=761833260858231&columns=name%2Cdelivery%2Ccampaign_name%2Cbid%2Cbudget%2Clast_significant_edit%2Cresults%2Creach%2Cimpressions%2Ccost_per_result%2Cquality_score_organic%2Cquality_score_ectr%2Cquality_score_ecvr%2Cspend%2Cend_time%2Cschedule%2Cactions%3Alink_click%2Cactions%3Aoffsite_conversion.fb_pixel_purchase%2Cactions%3Aonsite_conversion.purchase%2Cwebsite_purchase_roas%3Aoffsite_conversion.fb_pixel_purchase&attribution_windows=default">
+                                    <img class="mx-auto table-icon"
+                                         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAABjElEQVRIib3VT0sVURgG8J9eVy6sTQWCO7Eg0UUuFD9AiOA3MCIIFwbt2kkE4TISrKW0atEXKPELKFLSxi8Q4r0XCVetrt0WZ8xzp5k7ZxR74MCZd573ed53zp/hmjGQwGlgFtO4k8Wa+I5d/L6s+Q2so41uyWjhNUbqii/gpI9wfrTxMFV8BZ0a4uejg6cplaeIt/EVh7lOO/06uan6s+zhbi7vSYF54ZqsV4if4lZBXt6gKyx8DxrCjuhn8CHiD+MNPmG/gNvEYGwwXyHexYuIv5rAnxO5TBW0nsevaD6ewJ+KDUYTEmIMVlOCZhXxQLhOBrAZxZ9H8bWUSloJFZVhoiTegqHs4VsJaRgPsvkPYY/DGG5n8+mS3B7NhupD9izib1Rw25nm3090hvcllVwG7zLNnkV+62prcY6m0KG8wU88doUfSJb7SLhW/jGAL1gWbsW6OBOu6504WHQOPmIJxzXEj7CIrfyLsoP2GffxysXWLEITLzGJ7RoF9aCBGdyLYrNZbKgw43/iD3oXpjAheUoMAAAAAElFTkSuQmCC"/>
+                                </a>
+                            </td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                        </tr>
+                        <tr id="googleExp-skills-pro">
+                            <td class="text-center">
+                                <a href="https://ads.google.com/aw/overview?ocid=605602508&euid=45698931&__u=4194347419&uscid=605602508&__c=3417469292&authuser=0&subid=at-de-ha-aw-sk-c-bau!o3~Cj0KCQiAh4j-BRCsARIsAGeV12AaKWAsRtnAy2ZbLp8BE0M19PLYg5zHm8NsYOllxn7akuNRXUHpToEaAtzlEALw_wcB~57172089813">
+                                    <img class="mx-auto table-icon"
+                                         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAABYElEQVRIieXVO0scYRTG8Z+Xwko0EMMaRQgpjOWCfSA2hlSCoNZByEcIaVMHtkgQv4D4DbRKkKiICNpEYquuNmKwM8tmU8wOGWdn55ZKfODA8HKe/znvvDcegp7jA77jHL9xiT18xFRZ8COsoIFWSjSxhpEi8EmcZIDjcdZuKlMVnBaE/8G7PPAe7CQADrCAx+28YcwJ1qWJt3ngsJgA/4S+lIam88JhPwZfK2LO0rjgX4bwW4z+L7Q/8l0VTDnUV9QTPPNYzuC2MItmtEAllnTcxTyBmYwC8AT13hyJZdWCaIGLWELpK6AN/xUfHNO5yE8TzAOCcxCN1+7uvh/dKse36bq7C5+kHmzEfF+6JS/oPGg16QetluCppnWznWA4xJJ/N+Yg3uBbQu5m2nQpd9mFcSXYxpmaxM+C8Bu8zAMPNYTPghcsC76LF0XgUT3De2wJHpUGrnGEVbwqC74f+gsL/Z79dQlZNgAAAABJRU5ErkJggg=="/>
+                                </a>
+                            </td>
+
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                        </tr>
+                        <tr>
+                            <td>Sales</td>
+                        </tr>
+                        <tr id="fbSales-skills-pro"
+                            class="border-top">
+                            <td class="text-center">
+                                <a href="https://business.facebook.com/adsmanager/manage/campaigns?act=359727158611640&business_id=761833260858231&columns=name%2Cdelivery%2Ccampaign_name%2Cbid%2Cbudget%2Clast_significant_edit%2Cresults%2Creach%2Cimpressions%2Ccost_per_result%2Cquality_score_organic%2Cquality_score_ectr%2Cquality_score_ecvr%2Cspend%2Cend_time%2Cschedule%2Cactions%3Alink_click%2Cactions%3Aoffsite_conversion.fb_pixel_purchase%2Cactions%3Aonsite_conversion.purchase%2Cwebsite_purchase_roas%3Aoffsite_conversion.fb_pixel_purchase&attribution_windows=default">
+
+                                    <img class="mx-auto table-icon"
+                                         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAABjElEQVRIib3VT0sVURgG8J9eVy6sTQWCO7Eg0UUuFD9AiOA3MCIIFwbt2kkE4TISrKW0atEXKPELKFLSxi8Q4r0XCVetrt0WZ8xzp5k7ZxR74MCZd573ed53zp/hmjGQwGlgFtO4k8Wa+I5d/L6s+Q2so41uyWjhNUbqii/gpI9wfrTxMFV8BZ0a4uejg6cplaeIt/EVh7lOO/06uan6s+zhbi7vSYF54ZqsV4if4lZBXt6gKyx8DxrCjuhn8CHiD+MNPmG/gNvEYGwwXyHexYuIv5rAnxO5TBW0nsevaD6ewJ+KDUYTEmIMVlOCZhXxQLhOBrAZxZ9H8bWUSloJFZVhoiTegqHs4VsJaRgPsvkPYY/DGG5n8+mS3B7NhupD9izib1Rw25nm3090hvcllVwG7zLNnkV+62prcY6m0KG8wU88doUfSJb7SLhW/jGAL1gWbsW6OBOu6504WHQOPmIJxzXEj7CIrfyLsoP2GffxysXWLEITLzGJ7RoF9aCBGdyLYrNZbKgw43/iD3oXpjAheUoMAAAAAElFTkSuQmCC"/>
+                                </a>
+                            </td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                        </tr>
+                        <tr id="googleSales-skills-pro">
+                            <td class="text-center">
+                                <a href="https://ads.google.com/aw/overview?ocid=605602508&euid=45698931&__u=4194347419&uscid=605602508&__c=3417469292&authuser=0&subid=at-de-ha-aw-sk-c-bau!o3~Cj0KCQiAh4j-BRCsARIsAGeV12AaKWAsRtnAy2ZbLp8BE0M19PLYg5zHm8NsYOllxn7akuNRXUHpToEaAtzlEALw_wcB~57172089813">
+
+                                    <img class="mx-auto table-icon"
+                                         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAABYElEQVRIieXVO0scYRTG8Z+Xwko0EMMaRQgpjOWCfSA2hlSCoNZByEcIaVMHtkgQv4D4DbRKkKiICNpEYquuNmKwM8tmU8wOGWdn55ZKfODA8HKe/znvvDcegp7jA77jHL9xiT18xFRZ8COsoIFWSjSxhpEi8EmcZIDjcdZuKlMVnBaE/8G7PPAe7CQADrCAx+28YcwJ1qWJt3ngsJgA/4S+lIam88JhPwZfK2LO0rjgX4bwW4z+L7Q/8l0VTDnUV9QTPPNYzuC2MItmtEAllnTcxTyBmYwC8AT13hyJZdWCaIGLWELpK6AN/xUfHNO5yE8TzAOCcxCN1+7uvh/dKse36bq7C5+kHmzEfF+6JS/oPGg16QetluCppnWznWA4xJJ/N+Yg3uBbQu5m2nQpd9mFcSXYxpmaxM+C8Bu8zAMPNYTPghcsC76LF0XgUT3De2wJHpUGrnGEVbwqC74f+gsL/Z79dQlZNgAAAABJRU5ErkJggg=="/>
+                                </a>
+                            </td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                        </tr>
+
+                        <tr>
+                            <td>KPI</td>
+                        </tr>
+                        <tr id="wcSales-skills-pro"
+                            class="mt-4 border-top">
+                            <td class="text-center">
+                                Revenue
+                            </td>
+                            <td class="tooltip underline cursor-help"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr id="profitRow-skills-pro"
+                            class="font-weight-bold">
+                            <td class="text-center">
+                                Profit
+                            </td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                            <td>...</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </div>
+</main>
+<script src="http://localhost:8080/livereload.js?snipver=1"
+        async=""
+        defer=""></script>
+</body>
+</html>
