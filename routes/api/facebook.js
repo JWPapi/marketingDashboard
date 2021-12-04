@@ -7,9 +7,9 @@ const api = bizSdk.FacebookAdsApi.init(process.env.RMB_FB_TOKEN)
 module.exports = (req, res, next) => {
     const { entity } = req.query
 
-    const getAccountID = (entityName) => {
-        if (entityName === 'skills-candid' || entityName === 'skills-pro') return process.env.SKILLS_FB_ACC_ID
-        if (entityName === 'rmb') return process.env.RMB_FB_ACC_ID
+    const getAccountID = (entity) => {
+        if (entity === 'skills-candid' || entity === 'skills-pro') return process.env.SKILLS_FB_ACC_ID
+        if (entity === 'rmb') return process.env.RMB_FB_ACC_ID
         return false
     }
     const accountId = getAccountID(entity)

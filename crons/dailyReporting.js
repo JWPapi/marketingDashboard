@@ -7,14 +7,13 @@ const getWoocommerceData = async (dateMin, entity) => {
     return response.json()
 }
 
-const getFBData = async (preset, entity) => {
-    const params = entity === 'skills' ? '?entity=skills&' : '?entity=skills-pro&'
-    const response = await fetch(`https://dashboard.exalting.com/api/facebook${params}date_preset=${preset}`)
+const getFBData = async (entity) => {
+    const response = await fetch(`https://dashboard.exalting.com/api/facebook?entity=${entity}&date_preset=yesterday`)
     return response.json()
 }
 
-const getAdWordsData = async () => {
-    const response = await fetch('https://dashboard.exalting.com/api/analytics/adwords')
+const getAdWordsData = async (entity) => {
+    const response = await fetch(`https://dashboard.exalting.com/api/analytics/adwords?entity=${entity}`)
     return response.json()
 }
 
@@ -27,61 +26,54 @@ const makeApiCalls = async () => {
     const yesterdayISO = DateTime.utc().minus({ days : 1 }).toISODate()
 
     const apiCalls = [
-        getWoocommerceData(yesterdayISO, 'skills'),
-        getFBData('yesterday', 'skills'),
+        getWoocommerceData(yesterdayISO, 'skills-candid'),
+        getFBData('skills-candid'),
         getExchangeRates(),
-        getAdWordsData(),
+        getAdWordsData('skills-candid'),
         getWoocommerceData(yesterdayISO, 'skills-pro'),
-        getFBData('yesterday', 'skills-pro')
+        getFBData('skills-pro'),
+        getAdWordsData('skills-pro')
     ]
     const cost = {
         afterRefunds : 0.012,
         fees         : 0.0485,
         VAT          : 0.0765
     }
+    const variableCosts = cost.afterRefunds + cost.fees + cost.VAT
 
-    const [wcData, fbCandid, conversion, adWords, wcSkillsPro, fbSkillsPro] = await Promise.all(apiCalls)
+    const [wcCandid, fbCandid, conversion, gAdsCandid, wcPro, fbPro, gAdsPro] = await Promise.all(apiCalls)
 
-    //ToDo: add Adwords Spend0.87
-    const skillsPro = {
-        sales : wcSkillsPro.map((order) => order.total / conversion.rates[order.currency]).reduce((a, b) => a + b, 0) * conversion.rates.GBP,
-        salesAfterVariableCost() {
-            return this.sales - this.sales * ( cost.fees + cost.VAT + cost.afterRefunds )
-        },
-        spend : fbSkillsPro.spend,
-        profit() {
-            return this.salesAfterVariableCost() - parseFloat(this.spend)
+    console.log(wcCandid, fbCandid, gAdsCandid, wcPro, fbPro, gAdsPro)
+
+    const generateReport = (wcData, fbData, gAdsData, conversionRates, variableCosts) => {
+
+        const salesInUSD = wcData.map(order => order.total / conversionRates[order.currency])
+        const revenueUSD = salesInUSD.reduce((acc, curr) => acc + curr, 0)
+        const revenueGBP = revenueUSD * conversionRates.GBP
+        const revenueAfterVarCostsGBP = revenueGBP - variableCosts
+
+        return {
+            spend : parseFloat(fbData.spend) + parseFloat(gAdsData[1][1]),
+            profit: revenueAfterVarCostsGBP - parseFloat(fbData.spend) - parseFloat(gAdsData[1][1])
         }
     }
 
-    const {
-        total_sales   : sales,
-        total_refunds : totalRefunds
-    } = wcData
-    const discounts = wcData.totals[yesterdayISO].discount
-
-    //Todo: Get Candid Skills the same way I’m getting Pro Skills
-    const skillsCandid = {
-        sales : ( sales - discounts + totalRefunds ) * conversion.rates.GBP,
-        salesAfterVariableCost() {
-            return this.sales - this.sales * ( cost.fees + cost.VAT + cost.afterRefunds )
-        },
-        spend : fbCandid.spend - skillsPro.spend,
-        profit() {
-            return this.salesAfterVariableCost() - this.spend - fbSkillsPro.spend - adWords[1][1] - skillsPro.profit()
-        }
-    }
+    const skillsPro = generateReport(wcPro, fbPro, gAdsPro, conversion.rates, variableCosts)
+    const skillsCandid = generateReport(wcCandid, fbCandid, gAdsCandid, conversion.rates, variableCosts)
 
     const numbers = ['4915140773278', '13105073057', '447768115948', '447970260430']
-    const proMessage = `skills Pro profit yesterday: *£${Math.round(skillsPro.profit())}* at £${Math.round(skillsPro.spend)} spend`
-    const candidMessage = `skills Candid profit yesterday: *£${Math.round(skillsCandid.profit())}* at £${Math.round(skillsCandid.spend)} spend`
+    const proMessage = `skills Pro profit yesterday: *£${Math.round(skillsPro.profit)}* at £${Math.round(skillsPro.spend)} spend`
+    const candidMessage = `skills Candid profit yesterday: *£${Math.round(skillsCandid.profit)}* at £${Math.round(skillsCandid.spend)} spend`
 
-    whatsapp.sendWhatsapp(numbers, candidMessage)
-    whatsapp.sendWhatsapp(numbers, proMessage)
+    console.log(proMessage)
+    console.log(candidMessage)
+
+//whatsapp.sendWhatsapp(numbers, candidMessage)
+//whatsapp.sendWhatsapp(numbers, proMessage)
 
 }
 
-exports.start = () => {
-    makeApiCalls().catch((e) => console.log(e));
-};
+//exports.start = () => {
+makeApiCalls().catch((e) => console.log(e))
+//}
 
