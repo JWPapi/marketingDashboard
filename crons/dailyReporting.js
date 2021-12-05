@@ -43,8 +43,6 @@ const makeApiCalls = async () => {
 
     const [wcCandid, fbCandid, conversion, gAdsCandid, wcPro, fbPro, gAdsPro] = await Promise.all(apiCalls)
 
-    console.log(wcCandid, fbCandid, gAdsCandid, wcPro, fbPro, gAdsPro)
-
     const generateReport = (wcData, fbData, gAdsData, conversionRates, variableCosts) => {
 
         const salesInUSD = wcData.map(order => order.total / conversionRates[order.currency])
@@ -53,8 +51,8 @@ const makeApiCalls = async () => {
         const revenueAfterVarCostsGBP = revenueGBP - variableCosts
 
         return {
-            spend : parseFloat(fbData.spend) + parseFloat(gAdsData[1][1]),
-            profit: revenueAfterVarCostsGBP - parseFloat(fbData.spend) - parseFloat(gAdsData[1][1])
+            spend  : parseFloat(fbData.spend) + parseFloat(gAdsData[1][1]),
+            profit : revenueAfterVarCostsGBP - parseFloat(fbData.spend) - parseFloat(gAdsData[1][1])
         }
     }
 
@@ -65,15 +63,11 @@ const makeApiCalls = async () => {
     const proMessage = `skills Pro profit yesterday: *£${Math.round(skillsPro.profit)}* at £${Math.round(skillsPro.spend)} spend`
     const candidMessage = `skills Candid profit yesterday: *£${Math.round(skillsCandid.profit)}* at £${Math.round(skillsCandid.spend)} spend`
 
-    console.log(proMessage)
-    console.log(candidMessage)
-
-//whatsapp.sendWhatsapp(numbers, candidMessage)
-//whatsapp.sendWhatsapp(numbers, proMessage)
-
+    whatsapp.sendWhatsapp(numbers, candidMessage)
+    whatsapp.sendWhatsapp(numbers, proMessage)
 }
 
-//exports.start = () => {
-makeApiCalls().catch((e) => console.log(e))
-//}
+exports.start = () => {
+    makeApiCalls().catch((e) => console.log(e))
+}
 
