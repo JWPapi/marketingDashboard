@@ -8327,6 +8327,7 @@ const $ = (e) => document.getElementById(e)
 const currFormat = (val, curr) => curr + Math.round(val).toLocaleString()
 const extractNum = (e) => parseFloat(e.innerText.substring(1).replace(',', '').replace('.', ''))
 
+
 const getFBData = async (preset, column, entity, curr) => {
     const response = await fetch(`/api/facebook?entity=${entity}&date_preset=${preset}`)
     const {
@@ -8337,27 +8338,37 @@ const getFBData = async (preset, column, entity, curr) => {
     $(`fbExp-${entity}`).cells[column].innerText = currFormat(spend || 0, curr)
 }
 
-const getWCData = async () => {
+const getWCData = async (entity) => {
+    const todayFetch = fetch(`/api/woocommerce/?entity=${entity}&date_min=${todayUK}&date_max=${todayUK}`)
+    const yesterdayFetch = fetch(`/api/woocommerce/?entity=${entity}&date_min=${yesterdayUK}&date_max=${yesterdayUK}`)
+    const thisMonthFetch = fetch(`/api/woocommerce/?entity=${entity}&date_min=${firstDayOfMonthUK}`)
+    const lastMonthFetch = fetch(`/api/woocommerce/?entity=${entity}&date_min=${firstDayLastMonthUK}&date_max=${firstDayOfMonthUK}`)
 
-    const thisMonthFetch = fetch(`/api/woocommerce/?date_min=${firstDayOfMonthLA}&date_max=${lastDayOfMonthLA}`)
-    const lastMonthFetch = fetch(`/api/woocommerce/?period=last_month`)
-    const responses = await Promise.all([thisMonthFetch, lastMonthFetch])
-    const [thisMonthData, salesPerDayLastMonth] = await Promise.all(responses.map((e) => e.json()))
-    const {
-        total_sales : thisMonthSales,
-        totals      : salesPerDayThisMonth
-    } = thisMonthData
+    const responses = await Promise.all([todayFetch, yesterdayFetch, thisMonthFetch, lastMonthFetch])
+    const [today, yesterday, thisMonth, lastMonth] = await Promise.all(responses.map((e) => e.json()))
 
-    const yesterdaySales = (salesPerDayThisMonth, salesPerDayLastMonth) => {
-        if (salesPerDayThisMonth[yesterdayLA]) return salesPerDayThisMonth[yesterdayLA].sales
-        if (salesPerDayLastMonth[yesterdayLA]) return salesPerDayLastMonth[yesterdayLA].sales
-        return 0
+    const exchangeResponse = await fetch('https://api.exchangeratesapi.io/latest?access_key=18f87b9238942ef774dc23c81b579637&base=USD')
+    const { rates } = await exchangeResponse.json()
+    const sum = (arr) => arr.reduce((a, b) => a + b, 0)
+
+    const generateTotals = (orderList, entity) => {
+        const ordersInUSDArray = orderList.map((order) => order.total / rates[order.currency])
+        const totalVolume = ordersInUSDArray.reduce((a, b) => a + b, 0)
+        if (entity === 'rmb') {
+            return totalVolume
+        } else {
+            return totalVolume * rates.GBP * varCostTotal
+        }
     }
-    const todaySales = (salesPerDayThisMonth) => salesPerDayThisMonth[todayLA] ? salesPerDayThisMonth[todayLA].sales : 0
-    const sales = [todaySales(salesPerDayThisMonth), yesterdaySales(salesPerDayThisMonth, salesPerDayLastMonth), thisMonthSales, salesPerDayLastMonth.total_sales]
-    for ( let i = 0; i + 1 < $('wcSales-rmb').cells.length; i += 1 ) {
-        $('wcSales-rmb').cells[i + 1].innerText = `$${Number(sales[i])}`
-    }
+    const [totalToday, totalYesterday, totalThisMonth, totalLastMonth] = [today, yesterday, thisMonth, lastMonth].map((e) => generateTotals(e, entity))
+
+
+    const currencySign = entity === 'rmb' ? '$' : '£'
+    $(`wcSales-${entity}`).cells[1].innerText = `${currencySign}${Math.round(totalToday)}`
+    $(`wcSales-${entity}`).cells[2].innerText = `${currencySign}${Math.round(totalYesterday)}`
+    $(`wcSales-${entity}`).cells[3].innerText = `${currencySign}${Math.round(totalThisMonth)}`
+    $(`wcSales-${entity}`).cells[4].innerText = `${currencySign}${Math.round(totalLastMonth)}`
+
 }
 
 const dataCalls = [
@@ -8374,42 +8385,17 @@ const fillWithData = async () => {
 
     Array.from($('profitRow-rmb').cells).forEach((e, i) => {
         if (i !== 0) {
-            const tikTokSpend = $('tiktokExp-rmb') ? extractNum($('tiktokExp-rmb').cells[i]) : 0
             const fbSpend = extractNum($('fbExp-rmb').cells[i])
             const wooCommerceSales = extractNum($('wcSales-rmb').cells[i])
 
-            e.innerText = currFormat(wooCommerceSales - fbSpend - tikTokSpend, '$')
+            e.innerText = currFormat(wooCommerceSales - fbSpend , '$')
         }
     })
 }
 
 fillWithData().catch((err) => console.log(err))
 
-const getWCDataSkills = async (entity) => {
-    const todayFetch = fetch(`/api/woocommerce/?entity=${entity}&date_min=${todayUK}&date_max=${todayUK}`)
-    const yesterdayFetch = fetch(`/api/woocommerce/?entity=${entity}&date_min=${yesterdayUK}&date_max=${yesterdayUK}`)
-    const thisMonthFetch = fetch(`/api/woocommerce/?entity=${entity}&date_min=${firstDayOfMonthUK}`)
-    const lastMonthFetch = fetch(`/api/woocommerce/?entity=${entity}&date_min=${firstDayLastMonthUK}&date_max=${firstDayOfMonthUK}`)
 
-    const responses = await Promise.all([todayFetch, yesterdayFetch, thisMonthFetch, lastMonthFetch])
-    const [today, yesterday, thisMonth, lastMonth] = await Promise.all(responses.map((e) => e.json()))
-
-    const exchangeResponse = await fetch('https://api.exchangeratesapi.io/latest?access_key=18f87b9238942ef774dc23c81b579637&base=USD')
-    const { rates } = await exchangeResponse.json()
-
-    const exchangeOrdersToUSD = (orders) => orders.map(order => order.total / rates[order.currency])
-    const sum = (arr) => arr.reduce((a, b) => a + b, 0)
-    const calculateGBPValueAfterVarCost = (orders) => sum(exchangeOrdersToUSD(orders)) * rates.GBP * varCostTotal
-
-    const [totalToday, totalYesterday, totalThisMonth, totalLastMonth] = [today, yesterday, thisMonth, lastMonth].map(calculateGBPValueAfterVarCost)
-    console.log(totalToday, totalYesterday, totalThisMonth, totalLastMonth, entity)
-
-    $(`wcSales-${entity}`).cells[1].innerText = `£${Math.round(totalToday)}`
-    $(`wcSales-${entity}`).cells[2].innerText = `£${Math.round(totalYesterday)}`
-    $(`wcSales-${entity}`).cells[3].innerText = `£${Math.round(totalThisMonth)}`
-    $(`wcSales-${entity}`).cells[4].innerText = `£${Math.round(totalLastMonth)}`
-
-}
 
 const getGoogleDataSkills = async (entity) => {
     const validEntities = ['skills-pro', 'skills-candid']
@@ -8429,7 +8415,7 @@ const dataCallsSkills = [
     getFBData('yesterday', col.yesterday, 'skills-candid', '£'),
     getFBData('this_month', col.this_month, 'skills-candid', '£'),
     getFBData('last_month', col.last_month, 'skills-candid', '£'),
-    getWCDataSkills('skills-candid'),
+    getWCData('skills-candid'),
     getGoogleDataSkills('skills-candid')
 ].map((e) => e.catch((err) => console.log(err)))
 const fillSkillsData = async () => {
@@ -8450,7 +8436,7 @@ const dataCallsSkillsPro = [
     getFBData('yesterday', col.yesterday, 'skills-pro', '£'),
     getFBData('this_month', col.this_month, 'skills-pro', '£'),
     getFBData('last_month', col.last_month, 'skills-pro', '£'),
-    getWCDataSkills('skills-pro'),
+    getWCData('skills-pro'),
     getGoogleDataSkills('skills-pro')
 ].map((e) => e.catch((err) => console.log(err)))
 
