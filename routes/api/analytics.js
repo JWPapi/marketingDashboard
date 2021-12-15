@@ -12,11 +12,7 @@ const {
 } = process.env
 const jwtClient = new google.auth.JWT(GA_CLIENT_MAIL, null, GA_KEY, ['https://www.googleapis.com/auth/analytics.readonly'], null)
 
-const today = DateTime.utc().toISODate()
-const yesterday = DateTime.utc().minus({ days : 1 }).toISODate()
-const startOfMonth = DateTime.utc().startOf('month').toISODate()
-const startOfLastMonth = DateTime.utc().minus({ month : 1 }).startOf('month').toISODate()
-const endOfLastMonth = DateTime.utc().minus({ month : 1 }).endOf('month').toISODate()
+
 
 const auth = {
     auth : jwtClient,
@@ -24,10 +20,17 @@ const auth = {
 }
 
 googleRouter.get('/adwords', (req, res, next) => {
+
     const { entity } = req.query
     const validEntities = ['skills-pro', 'skills-candid']
 
     if (validEntities.includes(entity) === false) return res.status(400).json({ error : 'Invalid entity' })
+
+    const today = DateTime.utc().toISODate()
+    const yesterday = DateTime.utc().minus({ days : 1 }).toISODate()
+    const startOfMonth = DateTime.utc().startOf('month').toISODate()
+    const startOfLastMonth = DateTime.utc().minus({ month : 1 }).startOf('month').toISODate()
+    const endOfLastMonth = DateTime.utc().minus({ month : 1 }).endOf('month').toISODate()
 
     const timeframes = [today, yesterday, [startOfMonth, today], [startOfLastMonth, endOfLastMonth]]
 
