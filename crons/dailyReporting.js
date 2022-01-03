@@ -39,25 +39,27 @@ const makeApiCalls = async () => {
         fees         : 0.0485,
         VAT          : 0.0765
     }
-    const variableCosts = cost.afterRefunds + cost.fees + cost.VAT
+    const variableCostPercentage = cost.afterRefunds + cost.fees + cost.VAT
 
     const [wcCandid, fbCandid, conversion, gAdsCandid, wcPro, fbPro, gAdsPro] = await Promise.all(apiCalls)
 
-    const generateReport = (wcData, fbData, gAdsData, conversionRates, variableCosts) => {
+    const generateReport = (wcData, fbData, gAdsData, conversionRates, variableCostPercentage) => {
 
         const salesInUSD = wcData.map(order => order.total / conversionRates[order.currency])
         const revenueUSD = salesInUSD.reduce((acc, curr) => acc + curr, 0)
         const revenueGBP = revenueUSD * conversionRates.GBP
-        const revenueAfterVarCostsGBP = revenueGBP - variableCosts
+        const revenueMinusVarCostsGBP = revenueGBP * (1 - variableCostPercentage)
+
+
 
         return {
             spend  : parseFloat(fbData.spend) + parseFloat(gAdsData[1][1]),
-            profit : revenueAfterVarCostsGBP - parseFloat(fbData.spend) - parseFloat(gAdsData[1][1])
+            profit : revenueMinusVarCostsGBP - parseFloat(fbData.spend) - parseFloat(gAdsData[1][1])
         }
     }
 
-    const skillsPro = generateReport(wcPro, fbPro, gAdsPro, conversion.rates, variableCosts)
-    const skillsCandid = generateReport(wcCandid, fbCandid, gAdsCandid, conversion.rates, variableCosts)
+    const skillsPro = generateReport(wcPro, fbPro, gAdsPro, conversion.rates, variableCostPercentage)
+    const skillsCandid = generateReport(wcCandid, fbCandid, gAdsCandid, conversion.rates, variableCostPercentage)
 
     const numbers = ['4915140773278', '13105073057', '447768115948', '447970260430']
     const proMessage = `skills Pro profit yesterday: *£${Math.round(skillsPro.profit)}* at £${Math.round(skillsPro.spend)} spend`

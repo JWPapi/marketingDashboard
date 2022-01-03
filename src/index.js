@@ -53,7 +53,6 @@ const getWCData = async (entity) => {
 
     const exchangeResponse = await fetch('https://api.exchangeratesapi.io/latest?access_key=18f87b9238942ef774dc23c81b579637&base=USD')
     const { rates } = await exchangeResponse.json()
-    const sum = (arr) => arr.reduce((a, b) => a + b, 0)
 
     const generateTotals = (orderList, entity) => {
         const ordersInUSDArray = orderList.map((order) => order.total / rates[order.currency])
