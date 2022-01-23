@@ -15,7 +15,7 @@ const firstDayLastMonthUK = DateTime.utc().minus({ months : 1 }).startOf('month'
 //Constants
 const varCostSkills = {
     afterRefunds : 0.012,
-    fees         : 0.0485,
+    fees         : 0.0335,
     VAT          : 0.0765
 }
 const varCostTotal = 1 - varCostSkills.afterRefunds - varCostSkills.fees - varCostSkills.VAT
@@ -45,7 +45,7 @@ const getFBData = async (preset, column, entity, curr) => {
 const getWCData = async (entity) => {
     const todayFetch = fetch(`/api/woocommerce/?entity=${entity}&date_min=${todayUK}&date_max=${todayUK}`)
     const yesterdayFetch = fetch(`/api/woocommerce/?entity=${entity}&date_min=${yesterdayUK}&date_max=${yesterdayUK}`)
-    const thisMonthFetch = fetch(`/api/woocommerce/?entity=${entity}&date_min=${firstDayOfMonthUK}`)
+    const thisMonthFetch = fetch(`/api/woocommerce/?entity=${entity}&date_min=${firstDayOfMonthUK}&date_max=${todayUK}`)
     const lastMonthFetch = fetch(`/api/woocommerce/?entity=${entity}&date_min=${firstDayLastMonthUK}&date_max=${firstDayOfMonthUK}`)
 
     const responses = await Promise.all([todayFetch, yesterdayFetch, thisMonthFetch, lastMonthFetch])

@@ -36,7 +36,7 @@ const makeApiCalls = async () => {
     ]
     const cost = {
         afterRefunds : 0.012,
-        fees         : 0.0485,
+        fees         : 0.0335,
         VAT          : 0.0765
     }
     const variableCostPercentage = cost.afterRefunds + cost.fees + cost.VAT
