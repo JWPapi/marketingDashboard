@@ -1,7 +1,7 @@
 const { DateTime } = require('luxon')
 const { fillTikTokChart } = require('./socialMediaChart')
 
-//Dates
+//Dates ToDo: Move to Backend
 const todayLA = DateTime.local().setZone('America/Los_Angeles').toISODate()
 const yesterdayLA = DateTime.local().setZone('America/Los_Angeles').minus({ days : 1 }).toISODate()
 const firstDayOfMonthLA = DateTime.local().setZone('America/Los_Angeles').startOf('month').toISODate()
