@@ -1,6 +1,7 @@
-const fetch = require('node-fetch')
+require('dotenv').config();
 const { DateTime } = require('luxon')
 const whatsapp = require('../services/sendWhatsapp')
+const fetch = require('node-fetch')
 
 const getWoocommerceData = async (dateMin, entity) => {
     const response = await fetch(`https://dashboard.exalting.com/api/woocommerce/?entity=${entity}&date_min=${dateMin}&date_max=${dateMin}`)
@@ -8,7 +9,7 @@ const getWoocommerceData = async (dateMin, entity) => {
 }
 
 const getFBData = async (entity) => {
-    const response = await fetch(`https://dashboard.exalting.com/api/facebook?entity=${entity}&date_preset=yesterday`)
+    const response = await fetch(`https://dashboard.exalting.com/api/facebook?entity=${entity}&date_preset=yesterday&accessToken=${process.env.FB_ACCESS_TOKEN}`)
     return response.json()
 }
 
@@ -43,6 +44,8 @@ const makeApiCalls = async () => {
 
     const [wcCandid, fbCandid, conversion, gAdsCandid, wcPro, fbPro, gAdsPro] = await Promise.all(apiCalls)
 
+
+
     const generateReport = (wcData, fbData, gAdsData, conversionRates, variableCostPercentage) => {
 
         const salesInUSD = wcData.map(order => order.total / conversionRates[order.currency])
@@ -64,12 +67,11 @@ const makeApiCalls = async () => {
     const numbers = ['4915140773278', '13105073057', '447768115948', '447970260430']
     const proMessage = `skills Pro profit yesterday: *£${Math.round(skillsPro.profit)}* at £${Math.round(skillsPro.spend)} spend`
     const candidMessage = `skills Candid profit yesterday: *£${Math.round(skillsCandid.profit)}* at £${Math.round(skillsCandid.spend)} spend`
-
+    console.log(proMessage)
+    console.log(candidMessage)
     whatsapp.sendWhatsapp(numbers, candidMessage)
     whatsapp.sendWhatsapp(numbers, proMessage)
 }
 
-exports.start = () => {
-    makeApiCalls().catch((e) => console.log(e))
-}
+ makeApiCalls().catch((e) => console.log(e))
 

@@ -12,7 +12,7 @@ module.exports = () => {
   router.get('/', indexController());
 
   /* APIs */
-  router.get('/api/facebook/', fbApi);
+  router.use('/api/facebook/', fbApi);
   router.use('/api/analytics/', analyticsApi);
   router.get('/api/woocommerce/', wcApi);
   router.use('/api/socialBlade/', socialBladeApi);

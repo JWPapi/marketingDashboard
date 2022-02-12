@@ -1,11 +1,8 @@
 const { DateTime } = require('luxon')
-const { fillTikTokChart } = require('./socialMediaChart')
+const { fillTikTokChart } = require('./socialMediaChart');
 
-//Dates ToDo: Move to Backend
-const todayLA = DateTime.local().setZone('America/Los_Angeles').toISODate()
-const yesterdayLA = DateTime.local().setZone('America/Los_Angeles').minus({ days : 1 }).toISODate()
-const firstDayOfMonthLA = DateTime.local().setZone('America/Los_Angeles').startOf('month').toISODate()
-const lastDayOfMonthLA = DateTime.local().setZone('America/Los_Angeles').endOf('month').toISODate()
+
+//Dates ToDo: move to Backend
 
 const todayUK = DateTime.utc().toISODate()
 const yesterdayUK = DateTime.utc().minus({ days : 1 }).toISODate()
@@ -31,13 +28,15 @@ const $ = (e) => document.getElementById(e)
 const currFormat = (val, curr) => curr + Math.round(val).toLocaleString()
 const extractNum = (e) => parseFloat(e.innerText.substring(1).replace(',', '').replace('.', ''))
 
-
 const getFBData = async (preset, column, entity, curr) => {
-    const response = await fetch(`/api/facebook?entity=${entity}&date_preset=${preset}`)
+    const accessToken = await window.fbAccessToken
+
+    const response = await fetch(`/api/facebook?entity=${entity}&date_preset=${preset}&accessToken=${accessToken}`)
     const {
         action_values : saleValue,
         spend
     } = await response.json()
+
     $(`fbSales-${entity}`).cells[column].innerText = currFormat(saleValue ? saleValue[0].value : 0, curr)
     $(`fbExp-${entity}`).cells[column].innerText = currFormat(spend || 0, curr)
 }
@@ -65,7 +64,6 @@ const getWCData = async (entity) => {
     }
     const [totalToday, totalYesterday, totalThisMonth, totalLastMonth] = [today, yesterday, thisMonth, lastMonth].map((e) => generateTotals(e, entity))
 
-
     const currencySign = entity === 'rmb' ? '$' : '£'
     $(`wcSales-${entity}`).cells[1].innerText = `${currencySign}${Math.round(totalToday)}`
     $(`wcSales-${entity}`).cells[2].innerText = `${currencySign}${Math.round(totalYesterday)}`
@@ -91,14 +89,12 @@ const fillWithData = async () => {
             const fbSpend = extractNum($('fbExp-rmb').cells[i])
             const wooCommerceSales = extractNum($('wcSales-rmb').cells[i])
 
-            e.innerText = currFormat(wooCommerceSales - fbSpend , '$')
+            e.innerText = currFormat(wooCommerceSales - fbSpend, '$')
         }
     })
 }
 
 fillWithData().catch((err) => console.log(err))
-
-
 
 const getGoogleDataSkills = async (entity) => {
     const validEntities = ['skills-pro', 'skills-candid']
@@ -123,7 +119,6 @@ const dataCallsSkills = [
 ].map((e) => e.catch((err) => console.log(err)))
 const fillSkillsData = async () => {
     await Promise.allSettled(dataCallsSkills)
-
 
     Array.from($('profitRow-skills-candid').cells).forEach((e, i) => {
         if (i !== 0) {

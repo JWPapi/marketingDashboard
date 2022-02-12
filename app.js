@@ -3,8 +3,6 @@ const express = require('express');
 const cors = require('cors');
 const { schedule } = require('node-cron');
 const bodyParser = require('body-parser');
-const livereload = require('livereload');
-const path = require('path');
 const dailyReport = require('./crons/dailyReporting');
 const routes = require('./routes/router.js');
 
@@ -21,15 +19,12 @@ app.use(routes());
 
 schedule('15 7 * * *', () => {
   dailyReport.start();
+}, {
+  scheduled: true,
+  timezone: 'UTC',
 });
 
 
 const listener = app.listen(3000, () => {
   console.log(`Your app is listening on port ${listener.address().port}`);
 });
-
-const liveReloadServer = livereload.createServer({
-  port: 8080, exts: ['js', 'ejs', 'css'],
-});
-liveReloadServer.watch(path.join(__dirname, 'public'));
-liveReloadServer.watch(path.join(__dirname, 'views'));

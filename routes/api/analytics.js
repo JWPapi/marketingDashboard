@@ -2,7 +2,6 @@ const express = require('express')
 const { google } = require('googleapis')
 const { DateTime } = require('luxon')
 const fetch = require('node-fetch')
-
 const googleRouter = express.Router()
 const analytics = google.analytics('v3')
 const {

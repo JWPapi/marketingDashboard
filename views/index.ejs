@@ -15,8 +15,34 @@
           rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
-    <script src="/index.js?v=2"
+    <script src="/index.js?v=7"
             defer></script>
+
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+   <script>
+        window.fbAccessToken = new Promise((resolve, reject) => {
+            console.log('hello')
+            window.fbAsyncInit =  () => {
+                console.log('fbAsyncInit')
+                FB.init({
+                    appId            : '429576778186327',
+                    autoLogAppEvents : true,
+                    xfbml            : true,
+                    version          : 'v12.0'
+                })
+                FB.login((response) =>  {
+                    if (response.authResponse) {
+                        FB.getLoginStatus((response) =>  {
+                            if (response.status === 'connected') resolve(response.authResponse.accessToken)
+                            reject(new Error('User cancelled login or did not fully authorize.'))
+                        })
+                    } else {
+                        reject(new Error('No response gotten from Facebook.'))
+                    }
+                })
+            }
+        })
+    </script>
 </head>
 <body>
 <%- include('./partials/header') %>
